@@ -2,12 +2,11 @@ package ru.netology.test;
 
 import lombok.val;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.netology.data.DataHelper;
 import ru.netology.data.SqlData;
 import ru.netology.page.LoginPage;
-
-import java.sql.SQLException;
 
 import static com.codeborne.selenide.Selenide.open;
 import static com.codeborne.selenide.Selenide.sleep;
@@ -15,10 +14,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class LoginTest {
 
+    private LoginPage loginPage;
+
+    @BeforeEach
+    void setup() {
+        loginPage = open("http://localhost:9999", LoginPage.class);
+    }
+
     @Test
-    void shouldLoginWithExistUser() throws SQLException {
-        open("http://localhost:9999");
-        val loginPage = new LoginPage();
+    void shouldLoginWithExistUser() {
+
         val authInfo = DataHelper.getAuthInfo();
         val verificationPage = loginPage.validLogin(authInfo);
         val verificationCode = SqlData.getVerificationCode();
@@ -26,9 +31,8 @@ public class LoginTest {
     }
 
     @Test
-    void shouldAddNewUserAndLogin() throws SQLException {
-        open("http://localhost:9999");
-        val loginPage = new LoginPage();
+    void shouldAddNewUserAndLogin() {
+
         val authInfo = DataHelper.getUser();
         val verificationPage = loginPage.validLogin(authInfo);
         sleep(900);
@@ -37,9 +41,8 @@ public class LoginTest {
     }
 
     @Test
-    void shouldBlockIfLoginWithWrongPasswordThreeTime() throws SQLException {
-        open("http://localhost:9999");
-        val loginPage = new LoginPage();
+    void shouldBlockIfLoginWithWrongPasswordThreeTime() {
+
         val authInfo = DataHelper.getUserWithWrongPassword();
         loginPage.validLogin(authInfo);
         loginPage.errorMessage();
@@ -53,7 +56,7 @@ public class LoginTest {
     }
 
     @AfterAll
-    static void cleanTables() throws SQLException {
+    static void cleanTables() {
         SqlData.cleanData();
     }
 }

@@ -25,7 +25,7 @@ public class DataHelper {
         return new AuthInfo("vasya", faker.internet().password());
     }
 
-    public static AuthInfo getUser() throws SQLException {
+    public static AuthInfo getUser(){
         return new AuthInfo(SqlData.getNewUser(), "qwerty123");
     }
 
